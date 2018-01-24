@@ -14,6 +14,7 @@ let seedData = [];
 
 // start();
 nextLevel(jsonLinks)
+console.log(jsonLinks.length)
 
 function nextLevel(arr) {
     console.log('fired')
@@ -25,11 +26,11 @@ function nextLevel(arr) {
             let price = $('p#updateprice').text().trim()
             let image = $('div.main_image.sunglass > img').attr('src')
             let thumbsList = []
-            $('div.product_thumb').each((i, product) => {
-                console.log(i)
-                let data = $(this)
-                let name = data.find('h4').text()
-                console.log(name)
+            console.info("model is " + model)
+            // let hope = $('.product_thumbs_list').children().first().children().first().children().first().attr('data-color')
+            $('.product_thumb').each(function (){
+                let data = $(this);
+                console.log(data.children().first().attr('data-lenscolor'))
             })
             let sunglass = {
                 model,
@@ -37,7 +38,9 @@ function nextLevel(arr) {
                 price,
                 image
             }
-            seedData.push({ sunglass })
+            seedData.push({
+                sunglass
+            })
         })
     });
 }
@@ -72,20 +75,20 @@ function start() {
 }
 
 
-    // nextLayer()
-    // function nextLayer(newUrl) {
-    //     request('https://us.vonzipper.com/shop/sunglasses-polarized', function (err, resp, body) {
-    //         let $ = cheerio.load(body);
-    //         // let mynew = $('#site-container');
-    //         // // console.log(mynew.children());
-    //         // let thing = mynew.children().first().next().next();
-    //         // console.log("the next layer after main is " + thing)
-    //         // var next = thing.children().first();
-    //         // console.log(next.children())
-    //         console.log($('.product-name').text())
+// nextLayer()
+// function nextLayer(newUrl) {
+//     request('https://us.vonzipper.com/shop/sunglasses-polarized', function (err, resp, body) {
+//         let $ = cheerio.load(body);
+//         // let mynew = $('#site-container');
+//         // // console.log(mynew.children());
+//         // let thing = mynew.children().first().next().next();
+//         // console.log("the next layer after main is " + thing)
+//         // var next = thing.children().first();
+//         // console.log(next.children())
+//         console.log($('.product-name').text())
 
-    //     });
-    // }
+//     });
+// }
 
-    app.listen(port);
-    console.info(`Server running at ${port}`);
+app.listen(port);
+console.info(`Server running at ${port}`);
