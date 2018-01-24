@@ -3,12 +3,56 @@ const fs = require('fs');
 const app = require('express')();
 const cheerio = require('cheerio');
 const beautify = require("json-beautify");
+const jsonLinks = require('./sunglasses.json')
 
 const outputPath = 'sunglasses.json';
 const port = 8080;
 var url = 'https://www.smithoptics.com/us/Root/Men%27s/Sunglasses/New/c/1110';
 allSunglassLinks = [];
+let seedData = [];
 
+
+// start();
+nextLevel(jsonLinks)
+
+function nextLevel(arr) {
+    console.log('fired')
+    arr.forEach(element => {
+        request(element.link, function (err, resp, body) {
+            let $ = cheerio.load(body);
+            let model = $('#sidebar > h1').text()
+            let description = $('p.summary').text()
+            let price = $('p#updateprice').text().trim()
+            let image = $('div.main_image.sunglass > img').attr('src')
+            let thumbsList = []
+            $('div.product_thumb').each((i, product) => {
+                console.log(i)
+                let data = $(this)
+                let name = data.find('h4').text()
+                console.log(name)
+            })
+            let sunglass = {
+                model,
+                description,
+                price,
+                image
+            }
+            seedData.push({ sunglass })
+        })
+    });
+}
+
+function postFile(sunglassArr) {
+    fs.writeFile(outputPath, beautify(sunglassArr), (error) => {
+        if (error) {
+            console.error(error);
+            return false;
+        } else {
+            console.info(`Successfully wrote to ${outputPath}`);
+            return true;
+        }
+    });
+}
 
 function start() {
     request(url, function (err, resp, body) {
@@ -22,21 +66,10 @@ function start() {
             allSunglassLinks.push(newObj);
             // console.log(allSunglassLinks)
         })
-        nextLevel(allSunglassLinks)
+        postFile(allSunglassLinks)
+        // nextLevel(allSunglassLinks)
     });
 }
-
-function nextLevel(arr) {
-    console.log(arr);
-        arr.forEach(element => {
-            request(element.link, function (err, resp, body) {
-                let $ = cheerio.load(body);
-                let modal = $('#sidebar > h1').text()
-                console.log(modal);
-            })
-        });
-    }
-    start();
 
 
     // nextLayer()
