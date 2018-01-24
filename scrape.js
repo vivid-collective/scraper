@@ -5,7 +5,7 @@ const cheerio = require('cheerio');
 const beautify = require("json-beautify");
 const jsonLinks = require('./sunglasses.json')
 
-const outputPath = 'sunglasses.json';
+const outputPath = 'endData.json';
 const port = 8080;
 var url = 'https://www.smithoptics.com/us/Root/Men%27s/Sunglasses/New/c/1110';
 allSunglassLinks = [];
@@ -22,27 +22,38 @@ function nextLevel(arr) {
         request(element.link, function (err, resp, body) {
             let $ = cheerio.load(body);
             let model = $('#sidebar > h1').text()
-            let description = $('p.summary').text()
+            let description = $('p.summary').text().trim()
             let price = $('p#updateprice').text().trim()
             let image = $('div.main_image.sunglass > img').attr('src')
-            let thumbsList = []
-            console.info("model is " + model)
+            let variations = []
+
             // let hope = $('.product_thumbs_list').children().first().children().first().children().first().attr('data-color')
-            $('.product_thumb').each(function (){
+            $('.product_thumb').each(function () {
+                let newObj = {};
                 let data = $(this);
-                console.log(data.children().first().attr('data-lenscolor'))
+                newObj.variationModel = data.children().first().attr('data-color');
+                newObj.lensColor = data.children().first().attr('data-lenscolor');
+                newObj.lensSummary = data.children().first().attr('data-lens-summary');
+                newObj.image = data.children().first().attr('title');
+                variations.push(newObj);
             })
             let sunglass = {
                 model,
                 description,
                 price,
-                image
+                image,
+                variations
             }
             seedData.push({
                 sunglass
             })
+
         })
     });
+    setTimeout( () => {
+        postFile(seedData)
+    }, 5000)
+
 }
 
 function postFile(sunglassArr) {
