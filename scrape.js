@@ -33,6 +33,7 @@ function nextLevel(arr) {
                 let data = $(this);
                 newObj.variationModel = data.children().first().attr('data-color');
                 newObj.lensColor = data.children().first().attr('data-lenscolor');
+                newObj.price = data.children().first().attr('price');
                 newObj.lensSummary = data.children().first().attr('data-lens-summary');
                 newObj.image = data.children().first().attr('title');
                 variations.push(newObj);
