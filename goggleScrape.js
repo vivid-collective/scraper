@@ -3,11 +3,11 @@ const fs = require('fs');
 const app = require('express')();
 const cheerio = require('cheerio');
 const beautify = require("json-beautify");
-const jsonLinks = require('./sunglasses.json')
+const jsonLinks = require('./goggleLinks.json')
 
-const outputPath = 'endData.json';
+const outputPath = 'gogglesEndData.json';
 const port = 8080;
-var url = 'https://www.smithoptics.com/us/Root/Men%27s/Sunglasses/New/c/1110';
+var url = 'https://www.smithoptics.com/us/Root/Men%27s/Goggles/Snow/c/1310';
 allSunglassLinks = [];
 let seedData = [];
 
@@ -51,7 +51,7 @@ function nextLevel(arr) {
 
         })
     });
-    setTimeout( () => {
+    setTimeout(() => {
         postFile(seedData)
     }, 5000)
 
